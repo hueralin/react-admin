@@ -9,7 +9,8 @@ export default class App extends Component {
             // 设置路由映射
             <BrowserRouter>
                 <Switch>
-                    <Route path="/" exact component={Admin}></Route>
+                    {/* 一级路由 */}
+                    <Route path="/" component={Admin}></Route>
                     <Route path="/login" component={Login}></Route>
                 </Switch>
             </BrowserRouter>
