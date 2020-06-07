@@ -2,15 +2,32 @@
  * 登录的路由组件
  */
 import React, { Component } from 'react'
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, message } from 'antd'
+import { reqLogin } from '../../api'
 import './style.less'
 /**
  * 1. 收集表单数据
  * 2. 表单验证
  */
 export default class Login extends Component {
-    onFinish = valus => {
-        console.log(valus)
+    onFinish = async values => {
+        const { username, password } = values
+        // 每次都写try-catch，麻烦！
+        // try {
+        //     const res = await reqLogin(username, password)
+        //     console.log(res.data)
+        // } catch(err) {
+        //     alert('Error: ', err.message)
+        // }
+        const result = await reqLogin(username, password)
+        if (result.status === 0) {
+            message.success('登录成功')
+            // 跳转到管理主页，使用replace而不是push
+            // 是因为登录后不可以通过后退按钮回到登录页
+            this.props.history.replace('/')
+        } else {
+            message.error(result.msg)
+        }
     }
     render() {
         return (
@@ -38,7 +55,7 @@ export default class Login extends Component {
                             name="password"
                             rules={[
                                 { required: true, message: '密码必须输入' },
-                                { min: 6, message: '密码最少6位' },
+                                { min: 4, message: '密码最少6位' },
                                 { max: 16, message: '密码最长16位' }
                             ]}>
                             <Input.Password/>
