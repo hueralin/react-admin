@@ -3,7 +3,10 @@
  */
 import React, { Component } from 'react'
 import { Form, Input, Button, message } from 'antd'
+import { Redirect } from 'react-router-dom'
 import { reqLogin } from '../../api'
+import memoryUtil from '../../utils/memoryUtil'
+import storageUtil from '../../utils/storageUtil'
 import './style.less'
 /**
  * 1. 收集表单数据
@@ -21,6 +24,10 @@ export default class Login extends Component {
         // }
         const result = await reqLogin(username, password)
         if (result.status === 0) {
+            // 将用户信息保存至内存
+            memoryUtil.userInfo = result.data
+            // 将用户信息保存至storage
+            storageUtil.saveUser(result.data)
             message.success('登录成功')
             // 跳转到管理主页，使用replace而不是push
             // 是因为登录后不可以通过后退按钮回到登录页
@@ -30,6 +37,10 @@ export default class Login extends Component {
         }
     }
     render() {
+        // 如果已经登录，强制跳转到主页
+        if (memoryUtil.userInfo._id) {
+            return <Redirect to='/' />
+        }
         return (
             <div className="login">
                 <section className="login-content">
