@@ -8,23 +8,23 @@ import logo from '../../assets/imgs/logo.png'
 const SubMenu = Menu.SubMenu
 
 // 动态渲染菜单列表（map + 递归）
-function renderMenu_map(menuList) {
-    // 返回数组
-    return menuList.map(item => {
-        if (!item.children) {
-            return (
-                <Menu.Item key={item.key.slice(1)}>
-                    <Link to={item.key}>
-                        <span>{item.title}</span>
-                    </Link>
-                </Menu.Item>
-            )
-        }
-        return <SubMenu key={item.key.slice(1)} title={item.title}>
-            { renderMenu_map(item.children) }
-        </SubMenu>
-    })
-}
+// function renderMenu_map(menuList) {
+//     // 返回数组
+//     return menuList.map(item => {
+//         if (!item.children) {
+//             return (
+//                 <Menu.Item key={item.key.slice(1)}>
+//                     <Link to={item.key}>
+//                         <span>{item.title}</span>
+//                     </Link>
+//                 </Menu.Item>
+//             )
+//         }
+//         return <SubMenu key={item.key.slice(1)} title={item.title}>
+//             { renderMenu_map(item.children) }
+//         </SubMenu>
+//     })
+// }
 
 class LeftNav extends Component {
 

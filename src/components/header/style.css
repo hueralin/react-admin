@@ -39,8 +39,6 @@
   width: 75%;
   text-align: right;
 }
-.header .header-bottom .header-bottom-right img {
+.header .header-bottom .header-bottom-right .temp {
   margin: 0 15px;
-  width: 30px;
-  height: 20px;
 }
