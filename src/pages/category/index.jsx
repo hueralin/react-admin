@@ -41,9 +41,9 @@ export default class Category extends Component {
     }
 
     // 获取一级/二级分类
-    getCategories = async () => {
+    getCategories = async (parentId) => {
         this.setState({ loading: true })
-        let { parentId } = this.state
+        parentId = parentId || this.state.parentId
         let res = await reqCategories(parentId)
         if (res.status === 0) {
             if (parentId === '0') {
@@ -94,7 +94,7 @@ export default class Category extends Component {
             this.setState({ showStatus: 0 })
             // 再获取表单数据
             let { categoryId, categoryName } = values
-            // 然后发请求
+            // 然后发请求（在categoryId下新增categoryName分类）
             const res = await reqAddCategory(categoryId, categoryName)
             // 再次获取分类列表
             if (res.status === 0) {
@@ -102,6 +102,9 @@ export default class Category extends Component {
                 // 如果是在当前分类下添加商品，那么就重新请求一遍该分类下的商品分类
                 if (categoryId === this.state.parentId) {
                     this.getCategories()
+                } else if (categoryId === '0') {
+                    // 如果在当前分类下添加一级分类，那么也要重新获取一级分类列表
+                    this.getCategories('0')
                 }
                 // 否则不重新请求，没必要
             } else {

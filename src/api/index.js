@@ -49,7 +49,10 @@ export const reqWeather = (city) => {
 /**
  * 查询一级/二级分类列表
  */
-export const reqCategories = (parentId) => ajax('/manage/category/list', { parentId }, 'GET')
+export const reqCategories = (parentId) => ajax('/manage/category/list', { parentId })
+
+// 根据分类ID，请求分类信息
+export const reqCategory = (categoryId) => ajax('/manage/category/info', { categoryId })
 
 /**
  * 添加一级/二级分类
@@ -60,3 +63,30 @@ export const reqAddCategory = (parentId, categoryName) => ajax('/manage/category
  * 修改一级/二级分类
  */
 export const reqUpdateCategory = (categoryId, categoryName) => ajax('/manage/category/update', { categoryId, categoryName }, 'POST')
+
+/**
+ * 获取商品分页列表
+ * @param {number} pageNum 
+ * @param {number} pageSize 
+ */
+export const reqProducts = (pageNum, pageSize) => ajax('/manage/product/list', { pageNum, pageSize })
+
+/**
+ * 分页搜索商品
+ * @param {number} pageNum 
+ * @param {number} pageSize 
+ * @param {string} searchName 搜索关键字
+ * @param {string} searchType 关键字类型：productName，productDesc
+ */
+export const reqSearchProducts = ({pageNum, pageSize, searchName, searchType}) => ajax('/manage/product/search', {
+    pageNum,
+    pageSize,
+    [searchType]: searchName
+})
+
+/**
+ * 更新商品的状态（上架/下架）
+ * @param {number} productId 
+ * @param {number} status 
+ */
+export const reqUpdateStatus = (productId, status) => ajax('/manage/product/updateStatus', { productId, status }, 'POST')

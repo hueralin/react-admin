@@ -42,7 +42,7 @@ class LeftNav extends Component {
                 ))
             } else {
                 const { pathname } = this.props.location
-                const cItem = item.children.find(cItem => cItem.key === pathname )
+                const cItem = item.children.find(cItem => pathname.indexOf(cItem.key) === 0 )
                 if (cItem) {
                     this.openKey = item.key
                 }
@@ -61,7 +61,11 @@ class LeftNav extends Component {
     }
 
     render() {
-        const { pathname } = this.props.location
+        let { pathname } = this.props.location
+        // 访问product的子路由，也会有选中样式
+        if (pathname.indexOf('/product') === 0) {
+            pathname = '/product'
+        }
         return (
             <div className="left-nav">
                 <Link to='/'>
@@ -70,7 +74,7 @@ class LeftNav extends Component {
                     </header>
                 </Link>
                 <Menu theme='dark' 
-                    // 默认选中
+                    // 选中
                     selectedKeys={[pathname]}
                     // 子菜单垂直收缩
                     mode='inline'
