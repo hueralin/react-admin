@@ -45,3 +45,18 @@ export const reqWeather = (city) => {
     })
 }
 // export const reqWeather = (city) => ajax('http://wthrcdn.etouch.cn/weather_mini', { city }, 'GET')
+
+/**
+ * 查询一级/二级分类列表
+ */
+export const reqCategories = (parentId) => ajax('/manage/category/list', { parentId }, 'GET')
+
+/**
+ * 添加一级/二级分类
+ */
+export const reqAddCategory = (parentId, categoryName) => ajax('/manage/category/add', { categoryName, parentId }, 'POST')
+
+/**
+ * 修改一级/二级分类
+ */
+export const reqUpdateCategory = (categoryId, categoryName) => ajax('/manage/category/update', { categoryId, categoryName }, 'POST')
