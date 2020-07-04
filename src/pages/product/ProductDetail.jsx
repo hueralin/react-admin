@@ -23,11 +23,13 @@ export default class ProductDetail extends Component {
             const cName1 = res.data.name
             this.setState({ cName1 })
         } else {    // 二级分类名称
+            // 依次发送两个请求
             // const res1 = await reqCategory(pCategoryId)
             // const res2 = await reqCategory(categoryId)
             // const cName1 = res1.data.name
             // const cName2 = res2.data.name
             // this.setState({ cName1, cName2 })
+            
             // 同时发送两个请求
             const results = await Promise.all([reqCategory(pCategoryId), reqCategory(categoryId)])
             const cName1 = results[0].data.name

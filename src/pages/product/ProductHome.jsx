@@ -60,7 +60,7 @@ export default class ProductHome extends Component {
                 render: product => (
                     <>
                         <Button type='link' onClick={() => this.props.history.push('/product/detail', { product })}>详情</Button>
-                        <Button type='link'>修改</Button>
+                        <Button type='link' onClick={() => this.props.history.push('/product/addupdate', product)}>修改</Button>
                     </>
                 )
             }
@@ -135,7 +135,7 @@ export default class ProductHome extends Component {
             </>
         )
         const extra = (
-            <Button type='primary'>添加商品</Button>
+            <Button type='primary' onClick={() => this.props.history.push('/product/addupdate')}>添加商品</Button>
         )
         return (
             <Card title={title} extra={extra}>
