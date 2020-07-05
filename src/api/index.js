@@ -102,3 +102,20 @@ export const reqDeleteImg = (name) => ajax('/manage/img/delete', { name }, 'POST
  * @param {object} product 商品对象
  */
 export const reqAddOrUpdateProduction = (product) => ajax('/manage/product/' + (product._id ? 'update' : 'add'), product, 'POST')
+
+/**
+ * 获取角色列表
+ */
+export const reqRoles = () => ajax('/manage/role/list')
+
+/**
+ * 添加角色
+ * @param {string} name 角色名
+ */
+export const reqAddRole = (roleName) => ajax('/manage/role/add', { roleName }, 'POST')
+
+/**
+ * 修改角色权限
+ * @param {object} role 角色对象
+ */
+export const reqUpdateRole = (role) => ajax('/manage/role/update', role, 'POST')
