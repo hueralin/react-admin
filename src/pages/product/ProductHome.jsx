@@ -94,6 +94,7 @@ export default class ProductHome extends Component {
         }
     }
 
+    // 上架/下架
     updateStatus = async (_id, status) => {
         const res = await reqUpdateStatus(_id, status)
         if (res.status === 0) {

@@ -45,7 +45,7 @@ export default class ProductDetail extends Component {
                 <span>商品详情</span>
             </>
         )
-        const { name, desc, price, detail } = this.props.location.state.product
+        const { name, desc, price, detail, imgs } = this.props.location.state.product
         const { cName1, cName2 } = this.state
         return (
             <Card title={title} className='product-detail'>
@@ -69,9 +69,9 @@ export default class ProductDetail extends Component {
                     <Item>
                         <span className="left">商品图片：</span>
                         <span>
-                            <img src="" alt="pic1"/>
-                            <img src="" alt="pic2"/>
-                            <img src="" alt="pic3"/>
+                            {
+                                imgs.map(img => (<img className='product-img' src={`/upload/${img}`} alt={name} key={img} />))
+                            }
                         </span>
                     </Item>
                     <Item>

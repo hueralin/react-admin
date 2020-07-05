@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import { Card, Cascader, Upload, Form, Input, Button, message } from 'antd'
-import { reqCategories } from '../../api'
+import { Card, Cascader, Form, Input, Button, message } from 'antd'
+import { reqCategories, reqAddOrUpdateProduction } from '../../api'
+import PicturesWall from './PicturesWall'
+import RichTextEditor from './RichTextEditor'
 const Item = Form.Item
 const TextArea = Input.TextArea
 
@@ -17,6 +19,10 @@ export default class ProductAddAndUpdate extends Component {
 
     formRef = React.createRef()
 
+    picWall = React.createRef()
+
+    editor = React.createRef()
+
     // 初始化options
     initOptions = async (categories) => {
         // 将数组转化为Antd规定的格式
@@ -27,7 +33,7 @@ export default class ProductAddAndUpdate extends Component {
         }))
         // 如果是更新商品，需要显示商品当前的分类
         const { isUpdate, product } = this
-        const { pCategoryId, categoryId } = product
+        const { pCategoryId } = product
         // 是更新，且是二级分类
         if (isUpdate && pCategoryId !== '0') {
             // 拿到和当前分类同级下的二级分类
@@ -89,11 +95,46 @@ export default class ProductAddAndUpdate extends Component {
         this.setState({ options: [...this.state.options] })
     }
 
+    // 获取上传的图片名数组（父子组件通信）
+    // getImages = (imgs) => {
+    //     this.imgs = imgs
+    // }
+
     // 表单提交
     submit = () => {
         // 先验证
-        this.formRef.current.validateFields().then(names => {
-            console.log(names)
+        this.formRef.current.validateFields().then(async values => {
+            // 1、收集数据，并封装成 product 对象
+            const { name, desc, price, categoryIds } = values
+
+            let pCategoryId, categoryId
+            // 若只有一个ID
+            if (categoryIds.length === 1) {
+                // 则是一级分类
+                pCategoryId = '0'
+                categoryId = categoryIds[0]
+            } else {
+                pCategoryId = categoryIds[0]
+                categoryId = categoryIds[1]
+            }
+
+            const imgs = this.picWall.current.getImages()
+            const detail = this.editor.current.getContent()
+
+            const product = { pCategoryId, categoryId, name, desc, price, imgs, detail }
+            // 如果是更新
+            if (this.isUpdate) product._id = this.product._id
+
+            // 2、调用接口添加/更新
+            const result = await reqAddOrUpdateProduction(product)
+
+            // 3、根据结果提示
+            if (result.status === 0) {
+                message.success(`${ this.isUpdate ? '更新' : '添加' }商品成功`)
+                this.props.history.goBack()
+            } else {
+                message.error(`${ this.isUpdate ? '更新' : '添加' }商品失败`)
+            }
         })
     }
 
@@ -122,7 +163,7 @@ export default class ProductAddAndUpdate extends Component {
             wrapperCol: { span: 8 }
         }
         // 如果是更新，则从product里面取出商品数据
-        const { pCategoryId, categoryId, name, desc, price } = this.product
+        const { pCategoryId, categoryId, name, desc, price, imgs, detail } = this.product
         let categoryIds = []
         // 显示当前商品的分类
         if (this.isUpdate) {
@@ -173,12 +214,13 @@ export default class ProductAddAndUpdate extends Component {
                             placeholder='请选择商品分类'
                         />
                     </Item>
-                    {/* <Item label='商品图片' name='price' initialValue={price}>
-                        <Input type='number' placeholder='请输入商品价格' addonAfter='元' />
+                    <Item label='商品图片' name='pictures' initialValue={price}>
+                        {/* <PicturesWall getImages={this.getImages} /> */}
+                        <PicturesWall ref={this.picWall} imgs={imgs} />
                     </Item>
-                    <Item label='商品详情' name='price' initialValue={price}>
-                        <Input type='number' placeholder='请输入商品价格' addonAfter='元' />
-                    </Item> */}
+                    <Item label='商品详情' name='detail' initialValue={price} wrapperCol={{ span: 12 }}>
+                        <RichTextEditor ref={this.editor} detail={detail} />
+                    </Item>
                     <Item>
                         <Button type='primary' onClick={this.submit}>提交</Button>
                     </Item>

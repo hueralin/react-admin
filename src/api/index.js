@@ -90,3 +90,15 @@ export const reqSearchProducts = ({pageNum, pageSize, searchName, searchType}) =
  * @param {number} status 
  */
 export const reqUpdateStatus = (productId, status) => ajax('/manage/product/updateStatus', { productId, status }, 'POST')
+
+/**
+ * 删除已上传的图片
+ * @param {string} name 图片名
+ */
+export const reqDeleteImg = (name) => ajax('/manage/img/delete', { name }, 'POST')
+
+/**
+ * 添加/更新商品
+ * @param {object} product 商品对象
+ */
+export const reqAddOrUpdateProduction = (product) => ajax('/manage/product/' + (product._id ? 'update' : 'add'), product, 'POST')
