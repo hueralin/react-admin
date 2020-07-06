@@ -6,7 +6,8 @@ const menuList = [
     {
         title: '主页',
         key: '/home',
-        icon: ''
+        icon: '',
+        isPublic: true
     },
     {
         title: '商品',

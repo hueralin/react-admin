@@ -4,6 +4,7 @@ import { Menu } from 'antd'
 import menuList from '../../config/menuConf'
 import './style.less'
 import logo from '../../assets/imgs/logo.png'
+import memoryUtil from '../../utils/memoryUtil'
 
 const SubMenu = Menu.SubMenu
 
@@ -28,29 +29,48 @@ const SubMenu = Menu.SubMenu
 
 class LeftNav extends Component {
 
+    // 判断当前用户有没有 item 权限
+    hasAuth = item => {
+        // 1、如果是admin，则直接返回true
+        // 2、如果是是公开权限，则直接返回
+        // 3、如果是 item 存在于当前用户的menus里面，则直接返回
+        // 4、如果item的子权限存在于当前用户的menus里面，则直接返回
+        const { key, isPublic } = item
+        const { username, role: { menus } } = memoryUtil.userInfo
+        if (username === 'admin' || isPublic || menus.indexOf(key) !== -1) {
+            return true
+        } else if (item.children) {
+            return !!item.children.find(child => menus.indexOf(child.key) !== -1)
+        }else {
+            return false
+        }
+    }
+
     // 动态渲染菜单列表（reduce + 递归）
     renderMenu_reduce = (menuList) => {
         // 返回数组
         return menuList.reduce((prev, item) => {
-            if (!item.children) {
-                prev.push((
-                    <Menu.Item key={item.key}>
-                        <Link to={item.key}>
-                            <span>{item.title}</span>
-                        </Link>
-                    </Menu.Item>
-                ))
-            } else {
-                const { pathname } = this.props.location
-                const cItem = item.children.find(cItem => pathname.indexOf(cItem.key) === 0 )
-                if (cItem) {
-                    this.openKey = item.key
+            if (this.hasAuth(item)) {
+                if (!item.children) {
+                    prev.push((
+                        <Menu.Item key={item.key}>
+                            <Link to={item.key}>
+                                <span>{item.title}</span>
+                            </Link>
+                        </Menu.Item>
+                    ))
+                } else {
+                    const { pathname } = this.props.location
+                    const cItem = item.children.find(cItem => pathname.indexOf(cItem.key) === 0 )
+                    if (cItem) {
+                        this.openKey = item.key
+                    }
+                    prev.push((
+                        <SubMenu key={item.key} title={item.title}>
+                            { this.renderMenu_reduce(item.children) }
+                        </SubMenu>
+                    ))
                 }
-                prev.push((
-                    <SubMenu key={item.key} title={item.title}>
-                        { this.renderMenu_reduce(item.children) }
-                    </SubMenu>
-                ))
             }
             return prev
         }, [])

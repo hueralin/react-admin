@@ -4,6 +4,7 @@ import { PAGE_SIZE } from '../../utils/constants'
 import AuthTree from './AuthTree'
 import { reqRoles, reqAddRole, reqUpdateRole } from '../../api'
 import memoryUtil from '../../utils/memoryUtil'
+import storageUtil from '../../utils/storageUtil'
 import { formatDate } from '../../utils/dataUtil'
 
 export default class Role extends Component {
@@ -117,9 +118,17 @@ export default class Role extends Component {
         const res = await reqUpdateRole(role)
         // 根据结果显示
         if (res.status === 0) {
-            message.success('更新成功')
-            // 更新下 roles
-            this.setState({ roles: [...this.state.roles] })
+            // 如果更新的是自己角色的权限，则强制退出
+            if (role._id === memoryUtil.userInfo.role_id) {
+                memoryUtil.userInfo = {}
+                storageUtil.removeUser()
+                message.success('当前用户角色权限更改，请重新登录')
+                this.props.history.replace('/login')
+            } else {
+                message.success('更新成功')
+                // 更新下 roles
+                this.setState({ roles: [...this.state.roles] })
+            }
         } else {
             message.error('更新失败')
         }
