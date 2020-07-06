@@ -23,12 +23,6 @@ import { message } from 'antd'
 export const reqLogin = (username, password) => ajax('/login', {username, password}, 'POST')
 
 /**
- * 添加用户接口
- * @param {object} user { username, password, phone, email, role_id }
- */
-export const reqAddUser = (user) => ajax('/manage/user/add', user, 'POST')
-
-/**
  * 获取天气信息的接口
  */
 export const reqWeather = (city) => {
@@ -119,3 +113,20 @@ export const reqAddRole = (roleName) => ajax('/manage/role/add', { roleName }, '
  * @param {object} role 角色对象
  */
 export const reqUpdateRole = (role) => ajax('/manage/role/update', role, 'POST')
+
+/**
+ * 请求用户列表
+ */
+export const reqUsers = () => ajax('/manage/user/list')
+
+/**
+ * 删除用户
+ * @param {number} userId 用户ID
+ */
+export const reqDeleteUser = (userId) => ajax('/manage/user/delete', { userId }, 'POST')
+
+/**
+ * 添加/更新用户接口
+ * @param {object} user { username, password, phone, email, role_id }
+ */
+export const reqAddOrUpdateUser = (user) => ajax('/manage/user/' + (user._id ? 'update' : 'add'), user, 'POST')
