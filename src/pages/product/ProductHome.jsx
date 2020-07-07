@@ -147,6 +147,7 @@ export default class ProductHome extends Component {
                     rowKey='_id'
                     bordered
                     pagination={{
+                        // currentPage: this.pageNum,
                         defaultPageSize: PAGE_SIZE,
                         total,
                         showQuickJumper: true,
