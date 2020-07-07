@@ -1,0 +1,13 @@
+.left-nav {
+  color: #fff;
+  background-color: limegreen;
+}
+.left-nav .left-nav-header {
+  text-align: center;
+}
+.left-nav .left-nav-header img {
+  display: inline-block;
+  box-sizing: border-box;
+  height: 80px;
+  padding: 10px;
+}
